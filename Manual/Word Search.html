@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Word Search — Keep Talking and Nobody Explodes Module</title>
+    <meta name="viewport" content="initial-scale=1">
+	<link href='//fonts.googleapis.com/css?family=Special+Elite' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <style>
+        div.word-search-table {
+            position: relative;
+            width: 175mm;
+            margin: 0 auto;
+        }
+
+        div.word-search-table div.letter {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            border-radius: 100%;
+            background: white;
+            width: 10mm;
+            height: 10mm;
+            font-size: 18pt;
+            font-weight: bold;
+        }
+        div.word-search-table div.letter::before {
+            content: attr(data-letter);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) translateY(1mm);
+        }
+        div.word-search-table div.box {
+            position: absolute;
+            width: 24.5mm;
+            height: 24.5mm;
+        }
+        div.word-search-table div.box:not(.hint) {
+            border: .5mm solid black;
+        }
+        div.word-search-table div.box div.content {
+            position: absolute;
+            white-space: pre-line;
+            text-align: center;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) translateY(1mm);
+        }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <div class="page page-bg-03">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">Word Search</span>
+            </div>
+            <div class="page-content">
+                <img src="img/Component/Word Search.svg" class="diagram">
+                <h2>On the Subject of Word Search</h2>
+                <p class="flavour-text">
+                    LZIEAJDHARDERBNCOJWTHANPQIEYBZITLOOKSYWH
+
+                <p>
+                    A field of 36 letters will appear on the screen within the module.
+                    Some of these letters will spell up to three words from the charts
+                    below. Words may be spelled forward or backward.
+
+                <ol>
+                    <li>Use the last digit of the serial number (even or odd) to determine
+                        the correct words in the chart to reference.
+                    <li>Read the letters in the corners of the field. For each letter,
+                        locate the word in the chart whose box shows that
+                        letter in the same corner as its position in the field.
+                    <li>Only one of these words will be found in the field. Locate and
+                        select the first and last letter in the word to disarm the module.
+                        The bomb will record a strike if any incorrect letters are pressed.
+                </ol>
+
+                <div class='word-search-table'>
+                <!--##--><div class='box' style='left: 25mm; top: 0mm;'><div class='content'>TESTED
+—
+MODULE</div></div><div class='box' style='left: 50mm; top: 0mm;'><div class='content'>BOOM
+—
+TANGO</div></div><div class='box' style='left: 75mm; top: 0mm;'><div class='content'>DONE
+—
+NEXT</div></div><div class='box' style='left: 100mm; top: 0mm;'><div class='content'>BETTER
+—
+WORSE</div></div><div class='box' style='left: 125mm; top: 0mm;'><div class='content'>ALPHA
+—
+ZULU</div></div><div class='box' style='left: 0mm; top: 25mm;'><div class='content'>ECHO
+—
+SERIAL</div></div><div class='box' style='left: 25mm; top: 25mm;'><div class='content'>VICTOR
+—
+LIMA</div></div><div class='box' style='left: 50mm; top: 25mm;'><div class='content'>TIMER
+—
+SOLVED</div></div><div class='box' style='left: 75mm; top: 25mm;'><div class='content'>BLACK
+—
+WHITE</div></div><div class='box' style='left: 100mm; top: 25mm;'><div class='content'>KABOOM
+—
+OFFICE</div></div><div class='box' style='left: 125mm; top: 25mm;'><div class='content'>EXPERT
+—
+PORTS</div></div><div class='box' style='left: 150mm; top: 25mm;'><div class='content'>ROMEO
+—
+QUEBEC</div></div><div class='box' style='left: 0mm; top: 50mm;'><div class='content'>WORD
+—
+CHECK</div></div><div class='box' style='left: 25mm; top: 50mm;'><div class='content'>RED
+—
+MANUAL</div></div><div class='box' style='left: 50mm; top: 50mm;'><div class='content'>TANGO
+—
+SIERRA</div></div><div class='box' style='left: 75mm; top: 50mm;'><div class='content'>BRAVO
+—
+INDIA</div></div><div class='box' style='left: 100mm; top: 50mm;'><div class='content'>OSCAR
+—
+XRAY</div></div><div class='box' style='left: 125mm; top: 50mm;'><div class='content'>LETTER
+—
+PHRASE</div></div><div class='box' style='left: 150mm; top: 50mm;'><div class='content'>ALARM
+—
+SEVEN</div></div><div class='box' style='left: 0mm; top: 75mm;'><div class='content'>TRUE
+—
+FALSE</div></div><div class='box' style='left: 25mm; top: 75mm;'><div class='content'>EDGE
+—
+WORK</div></div><div class='box' style='left: 50mm; top: 75mm;'><div class='content'>SEARCH
+—
+CHART</div></div><div class='box' style='left: 75mm; top: 75mm;'><div class='content'>LIST
+—
+LABEL</div></div><div class='box' style='left: 100mm; top: 75mm;'><div class='content'>EIGHT
+—
+NINE</div></div><div class='box' style='left: 125mm; top: 75mm;'><div class='content'>SPELL
+—
+PASS</div></div><div class='box' style='left: 150mm; top: 75mm;'><div class='content'>FOUND
+—
+LOST</div></div><div class='box' style='left: 0mm; top: 100mm;'><div class='content'>FORGET
+—
+NOT</div></div><div class='box' style='left: 25mm; top: 100mm;'><div class='content'>SILLY
+—
+SLOTS</div></div><div class='box' style='left: 50mm; top: 100mm;'><div class='content'>NORTH
+—
+SOUTH</div></div><div class='box' style='left: 75mm; top: 100mm;'><div class='content'>EAST
+—
+WEST</div></div><div class='box' style='left: 100mm; top: 100mm;'><div class='content'>EMOJI
+—
+MATH</div></div><div class='box' style='left: 125mm; top: 100mm;'><div class='content'>LISTEN
+—
+TALK</div></div><div class='box' style='left: 150mm; top: 100mm;'><div class='content'>NUMBER
+—
+LOGIC</div></div><div class='box' style='left: 25mm; top: 125mm;'><div class='content'>FLASH
+—
+COLOR</div></div><div class='box' style='left: 50mm; top: 125mm;'><div class='content'>SIMON
+—
+SAYS</div></div><div class='box' style='left: 75mm; top: 125mm;'><div class='content'>FIRST
+—
+THIRD</div></div><div class='box' style='left: 100mm; top: 125mm;'><div class='content'>LEAD
+—
+FOLLOW</div></div><div class='box' style='left: 125mm; top: 125mm;'><div class='content'>COUNT
+—
+FIND</div></div><div class='letter' style='left: 50mm; top: 25mm;' data-letter='V'></div><div class='letter' style='left: 75mm; top: 25mm;' data-letter='U'></div><div class='letter' style='left: 100mm; top: 25mm;' data-letter='S'></div><div class='letter' style='left: 125mm; top: 25mm;' data-letter='Z'></div><div class='letter' style='left: 25mm; top: 50mm;' data-letter='P'></div><div class='letter' style='left: 50mm; top: 50mm;' data-letter='Q'></div><div class='letter' style='left: 75mm; top: 50mm;' data-letter='N'></div><div class='letter' style='left: 100mm; top: 50mm;' data-letter='X'></div><div class='letter' style='left: 125mm; top: 50mm;' data-letter='F'></div><div class='letter' style='left: 150mm; top: 50mm;' data-letter='Y'></div><div class='letter' style='left: 25mm; top: 75mm;' data-letter='T'></div><div class='letter' style='left: 50mm; top: 75mm;' data-letter='I'></div><div class='letter' style='left: 75mm; top: 75mm;' data-letter='M'></div><div class='letter' style='left: 100mm; top: 75mm;' data-letter='E'></div><div class='letter' style='left: 125mm; top: 75mm;' data-letter='D'></div><div class='letter' style='left: 150mm; top: 75mm;' data-letter='A'></div><div class='letter' style='left: 25mm; top: 100mm;' data-letter='K'></div><div class='letter' style='left: 50mm; top: 100mm;' data-letter='B'></div><div class='letter' style='left: 75mm; top: 100mm;' data-letter='W'></div><div class='letter' style='left: 100mm; top: 100mm;' data-letter='H'></div><div class='letter' style='left: 125mm; top: 100mm;' data-letter='J'></div><div class='letter' style='left: 150mm; top: 100mm;' data-letter='O'></div><div class='letter' style='left: 50mm; top: 125mm;' data-letter='R'></div><div class='letter' style='left: 75mm; top: 125mm;' data-letter='L'></div><div class='letter' style='left: 100mm; top: 125mm;' data-letter='C'></div><div class='letter' style='left: 125mm; top: 125mm;' data-letter='G'></div><div class='box hint' style='left: 0; top: 0;'><div class='content'>[even]
+—
+[odd]</div></div><!--###-->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
