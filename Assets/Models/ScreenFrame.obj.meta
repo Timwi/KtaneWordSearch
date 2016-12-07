@@ -7,11 +7,31 @@ ModelImporter:
   fileIDToRecycleName:
     100000: ScreenFrame
     100002: //RootNode
+    100004: ScreenFrame_MeshPart0
+    100006: ScreenFrame_MeshPart1
+    100008: ScreenFrame_MeshPart2
+    100010: ScreenFrame_MeshPart3
     400000: ScreenFrame
     400002: //RootNode
+    400004: ScreenFrame_MeshPart0
+    400006: ScreenFrame_MeshPart1
+    400008: ScreenFrame_MeshPart2
+    400010: ScreenFrame_MeshPart3
     2300000: ScreenFrame
+    2300002: ScreenFrame_MeshPart0
+    2300004: ScreenFrame_MeshPart1
+    2300006: ScreenFrame_MeshPart2
+    2300008: ScreenFrame_MeshPart3
     3300000: ScreenFrame
+    3300002: ScreenFrame_MeshPart0
+    3300004: ScreenFrame_MeshPart1
+    3300006: ScreenFrame_MeshPart2
+    3300008: ScreenFrame_MeshPart3
     4300000: ScreenFrame
+    4300002: ScreenFrame_MeshPart0
+    4300004: ScreenFrame_MeshPart1
+    4300006: ScreenFrame_MeshPart2
+    4300008: ScreenFrame_MeshPart3
   materials:
     importMaterials: 1
     materialName: 0
