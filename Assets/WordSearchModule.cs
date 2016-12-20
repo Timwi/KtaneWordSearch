@@ -364,12 +364,12 @@ public class WordSearchModule : MonoBehaviour
                     _isSolved = true;
                     foreach (var i in ixs)
                         TransitionLetter(i, LetterState.Highlighted, 10);
-                    Invoke("DoPass", .5f);
+                    Invoke("doPass", .5f);
                 }
                 else
                 {
                     Audio.PlaySoundAtTransform("Off2", MainSelectable.transform);
-                    Module.HandleStrike();
+                    StartCoroutine(giveStrike());
                     TransitionLetter(_selectedLetter.Value, LetterState.Visible, 10);
                 }
                 Debug.Log("[Word Search] " + logMessage);
@@ -384,7 +384,13 @@ public class WordSearchModule : MonoBehaviour
         }
     }
 
-    private void DoPass()
+    private IEnumerator giveStrike()
+    {
+        yield return new WaitForSeconds(.5f);
+        Module.HandleStrike();
+    }
+
+    private void doPass()
     {
         Module.HandlePass();
     }
