@@ -46,9 +46,12 @@ public class WordSearchModule : MonoBehaviour
             .ToArray();
     private string _chartLetters = ".VUSZ..PQNXFY.TIMEDA.KBWHJO..RLCG..";
 
+    private static int _moduleIdCounter = 1;
+    private int _moduleId;
+
     void Start()
     {
-        Debug.Log("[Word Search] Started");
+        _moduleId = _moduleIdCounter++;
 
         _isActive = false;
         _textMeshes = new TextMesh[_w * _h];
@@ -66,7 +69,7 @@ public class WordSearchModule : MonoBehaviour
             var j = i;
             MainSelectable.Children[i].OnInteract = delegate
             {
-                Debug.LogFormat("[Word Search] Pushed button #{0}. _isActive={1}, _isSolved={2}", j, _isActive, _isSolved);
+                Debug.LogFormat("[Word Search #{3}] Pushed button #{0}. _isActive={1}, _isSolved={2}", j, _isActive, _isSolved, _moduleId);
                 MainSelectable.Children[j].AddInteractionPunch();
                 Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MainSelectable.Children[j].transform);
                 if (_isActive && !_isSolved)
@@ -83,7 +86,7 @@ public class WordSearchModule : MonoBehaviour
         _isActive = true;
         var serial = Bomb.GetSerialNumber();
         var serialOdd = serial == null ? Rnd.Range(0, 2) == 0 : "13579".Contains(Bomb.GetSerialNumber().Last());
-        Debug.LogFormat("[Word Search] Activated; serial number is {0}", serialOdd ? "odd" : "even");
+        Debug.LogFormat("[Word Search #{1}] Activated; serial number is {0}", serialOdd ? "odd" : "even", _moduleId);
 
         tryAgain:
 
@@ -102,19 +105,16 @@ public class WordSearchModule : MonoBehaviour
 
         var correctIndex = Rnd.Range(0, wrongWords.Count);
         _solution = wrongWords[correctIndex];
-        Debug.LogFormat("[Word Search] Correct word is {0}", _solution);
+        Debug.LogFormat("[Word Search #{1}] Correct word is {0}", _solution, _moduleId);
 
         var decoyWords = _chartWords.SelectMany(w => w).Where(w => w.Length > 0).Except(wrongWords).ToList().Shuffle();
         wrongWords.RemoveAt(correctIndex);
 
-        Debug.LogFormat("[Word Search] Wrong words are {0}", wrongWords.OrderBy(w => w).JoinString(", "));
-        Debug.LogFormat("[Word Search] Decoy words are {0}", decoyWords.OrderBy(w => w).JoinString(", "));
+        Debug.LogFormat("[Word Search #{1}] Wrong words are {0}", wrongWords.OrderBy(w => w).JoinString(", "), _moduleId);
 
         var coords = Enumerable.Range(0, _w * _h).ToList();
         var directions = new[] { Direction.Down, Direction.DownRight, Direction.Right, Direction.UpRight, Direction.Up, Direction.UpLeft, Direction.Left, Direction.DownLeft };
         var indexes = Enumerable.Range(0, _solution.Length).ToList().Shuffle();
-
-        logField("Start field:");
 
         coords.Shuffle();
         foreach (var coord in coords)
@@ -122,7 +122,7 @@ public class WordSearchModule : MonoBehaviour
                 if (TryPlaceWord(_solution, 0, coord % _w, coord / _w, dir))
                     goto initialPlaced;
 
-        Debug.LogFormat("[Word Search] Fatal: could not place initial word.");
+        Debug.LogFormat("[Word Search #{0}] Fatal: could not place initial word.", _moduleId);
         Module.HandlePass();
         return;
 
@@ -170,11 +170,11 @@ public class WordSearchModule : MonoBehaviour
                 foreach (var dir in directions)
                     if (TryPlaceWord(wrong, 0, coord % _w, coord / _w, dir))
                     {
-                        Debug.LogFormat("[Word Search] Wrong word {0} happens to come up in grid at {1},{2},{3}. Restarting.", wrong, coord % _w, coord / _w, dir);
+                        Debug.LogFormat("[Word Search #{4}] Wrong word {0} happens to come up in grid at {1},{2},{3}. Restarting.", wrong, coord % _w, coord / _w, dir, _moduleId);
                         goto tryAgain;
                     }
 
-        logField("Final field:");
+        Debug.LogFormat("[Word Search #{1}] Field:{0}", _field.Select((ch, i) => (i % _w == 0 ? "\n" : null) + (ch == '\0' ? '?' : ch)).JoinString(), _moduleId);
 
         for (int i = 0; i < _w * _h; i++)
         {
@@ -195,7 +195,6 @@ public class WordSearchModule : MonoBehaviour
                             return false;
                     for (int j = 0; j < word.Length; j++)
                         _field[x + _w * (y - i + j)] = word[j];
-                    logField(string.Format("After placing {0} across {1},{2} dir {3}:", word, x, y, dir));
                     return true;
                 }
                 break;
@@ -208,7 +207,6 @@ public class WordSearchModule : MonoBehaviour
                             return false;
                     for (int j = 0; j < word.Length; j++)
                         _field[(x - i + j) + _w * (y - i + j)] = word[j];
-                    logField(string.Format("After placing {0} across {1},{2} dir {3}:", word, x, y, dir));
                     return true;
                 }
                 break;
@@ -221,7 +219,6 @@ public class WordSearchModule : MonoBehaviour
                             return false;
                     for (int j = 0; j < word.Length; j++)
                         _field[(x - i + j) + _w * y] = word[j];
-                    logField(string.Format("After placing {0} across {1},{2} dir {3}:", word, x, y, dir));
                     return true;
                 }
                 break;
@@ -234,7 +231,6 @@ public class WordSearchModule : MonoBehaviour
                             return false;
                     for (int j = 0; j < word.Length; j++)
                         _field[(x - i + j) + _w * (y + i - j)] = word[j];
-                    logField(string.Format("After placing {0} across {1},{2} dir {3}:", word, x, y, dir));
                     return true;
                 }
                 break;
@@ -247,7 +243,6 @@ public class WordSearchModule : MonoBehaviour
                             return false;
                     for (int j = 0; j < word.Length; j++)
                         _field[x + _w * (y + i - j)] = word[j];
-                    logField(string.Format("After placing {0} across {1},{2} dir {3}:", word, x, y, dir));
                     return true;
                 }
                 break;
@@ -260,7 +255,6 @@ public class WordSearchModule : MonoBehaviour
                             return false;
                     for (int j = 0; j < word.Length; j++)
                         _field[(x + i - j) + _w * (y + i - j)] = word[j];
-                    logField(string.Format("After placing {0} across {1},{2} dir {3}:", word, x, y, dir));
                     return true;
                 }
                 break;
@@ -273,7 +267,6 @@ public class WordSearchModule : MonoBehaviour
                             return false;
                     for (int j = 0; j < word.Length; j++)
                         _field[(x + i - j) + _w * y] = word[j];
-                    logField(string.Format("After placing {0} across {1},{2} dir {3}:", word, x, y, dir));
                     return true;
                 }
                 break;
@@ -286,17 +279,11 @@ public class WordSearchModule : MonoBehaviour
                             return false;
                     for (int j = 0; j < word.Length; j++)
                         _field[(x + i - j) + _w * (y - i + j)] = word[j];
-                    logField(string.Format("After placing {0} across {1},{2} dir {3}:", word, x, y, dir));
                     return true;
                 }
                 break;
         }
         return false;
-    }
-
-    private void logField(string msg)
-    {
-        Debug.LogFormat("[Word Search] {0}{1}", msg, _field.Select((ch, i) => (i % _w == 0 ? "\n" : null) + (ch == '\0' ? '?' : ch)).JoinString());
     }
 
     private HashSet<int> _coroutinesActive = new HashSet<int>();
@@ -372,7 +359,7 @@ public class WordSearchModule : MonoBehaviour
                     StartCoroutine(giveStrike());
                     TransitionLetter(_selectedLetter.Value, LetterState.Visible, 10);
                 }
-                Debug.Log("[Word Search] " + logMessage);
+                Debug.LogFormat("[Word Search #{0}] {1}", _moduleId, logMessage);
                 _selectedLetter = null;
             }
             else
