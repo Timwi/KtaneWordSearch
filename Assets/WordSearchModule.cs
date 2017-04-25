@@ -441,4 +441,27 @@ public class WordSearchModule : MonoBehaviour
         mr.material.mainTexture = tex;
         mr.material.shader = Shader.Find("Unlit/Transparent");
     }
+
+    KMSelectable[] ProcessTwitchCommand(string command)
+    {
+        var pieces = command.Trim().ToLowerInvariant().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        if ((pieces.Length != 3 && pieces.Length != 4 && pieces.Length != 5) || pieces[0] != "select")
+            return null;
+        if (pieces.Length == 4 && pieces[2] != "to")
+            return null;
+        if (pieces.Length == 5 && (pieces[1] != "from" || pieces[3] != "to"))
+            return null;
+
+        var btns = new[] { pieces[pieces.Length == 5 ? 2 : 1], pieces[pieces.Length - 1] }
+            .Select(str =>
+            {
+                if (str.Length == 2 && str[0] >= 'a' && str[0] <= 'f' && str[1] >= '1' && str[1] <= '6')
+                    return MainSelectable.Children[(str[0] - 'a') + 6 * (str[1] - '1')];
+                if (str.Length == 3 && str[0] >= '1' && str[0] <= '6' && str[1] == ',' && str[2] >= '1' && str[2] <= '6')
+                    return MainSelectable.Children[(str[0] - '1') + 6 * (str[2] - '1')];
+                return null;
+            })
+            .ToArray();
+        return btns.Contains(null) ? null : btns;
+    }
 }
