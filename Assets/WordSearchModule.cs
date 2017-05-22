@@ -67,15 +67,7 @@ public class WordSearchModule : MonoBehaviour
             _states[i] = LetterState.Invisible;
 
             var j = i;
-            MainSelectable.Children[i].OnInteract = delegate
-            {
-                Debug.LogFormat("[Word Search #{3}] Pushed button #{0}. _isActive={1}, _isSolved={2}", j, _isActive, _isSolved, _moduleId);
-                MainSelectable.Children[j].AddInteractionPunch();
-                Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MainSelectable.Children[j].transform);
-                if (_isActive && !_isSolved)
-                    HandleLetter(j);
-                return false;
-            };
+            MainSelectable.Children[i].OnInteract = delegate { HandleLetter(j); return false; };
         }
 
         Module.OnActivate = ActivateModule;
@@ -331,8 +323,17 @@ public class WordSearchModule : MonoBehaviour
         _coroutinesActive.Remove(ix);
     }
 
-    private void HandleLetter(int ix)
+    private bool? HandleLetter(int ix)
     {
+        MainSelectable.Children[ix].AddInteractionPunch();
+        Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, MainSelectable.Children[ix].transform);
+        if (!_isActive || _isSolved)
+            return null;
+
+        Debug.LogFormat("[Word Search #{0}] Pushed button at ({1}, {2}).", _moduleId, ix % 6 + 1, ix / 6 + 1);
+
+        bool? ret = null;
+
         if (_selectedLetter == ix)
         {
             _selectedLetter = null;
@@ -352,12 +353,14 @@ public class WordSearchModule : MonoBehaviour
                     foreach (var i in ixs)
                         TransitionLetter(i, LetterState.Highlighted, 10);
                     Invoke("doPass", .5f);
+                    ret = true;
                 }
                 else
                 {
                     Audio.PlaySoundAtTransform("Off2", MainSelectable.transform);
-                    StartCoroutine(giveStrike());
+                    Invoke("giveStrike", .5f);
                     TransitionLetter(_selectedLetter.Value, LetterState.Visible, 10);
+                    ret = false;
                 }
                 Debug.LogFormat("[Word Search #{0}] {1}", _moduleId, logMessage);
                 _selectedLetter = null;
@@ -369,11 +372,11 @@ public class WordSearchModule : MonoBehaviour
                 Audio.PlaySoundAtTransform("On1", MainSelectable.transform);
             }
         }
+        return ret;
     }
 
-    private IEnumerator giveStrike()
+    private void giveStrike()
     {
-        yield return new WaitForSeconds(.5f);
         Module.HandleStrike();
     }
 
@@ -391,7 +394,7 @@ public class WordSearchModule : MonoBehaviour
         var endX = endLetter % _w;
         var endY = endLetter / _w;
 
-        logMessage = string.Format("Coordinates clicked: {0},{1} → {2},{3}.", startX, startY, endX, endY);
+        logMessage = string.Format("Coordinates clicked: ({0}, {1}) → ({2}, {3}).", startX + 1, startY + 1, endX + 1, endY + 1);
         if (Math.Abs(startX - endX) != 0 && Math.Abs(startY - endY) != 0 && Math.Abs(startX - endX) != Math.Abs(startY - endY))
         {
             logMessage += " Not horizontal, vertical or diagonal.";
@@ -442,26 +445,42 @@ public class WordSearchModule : MonoBehaviour
         mr.material.shader = Shader.Find("Unlit/Transparent");
     }
 
-    KMSelectable[] ProcessTwitchCommand(string command)
+    IEnumerator ProcessTwitchCommand(string command)
     {
         var pieces = command.Trim().ToLowerInvariant().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         if ((pieces.Length != 3 && pieces.Length != 4 && pieces.Length != 5) || pieces[0] != "select")
-            return null;
+            yield break;
         if (pieces.Length == 4 && pieces[2] != "to")
-            return null;
+            yield break;
         if (pieces.Length == 5 && (pieces[1] != "from" || pieces[3] != "to"))
-            return null;
+            yield break;
 
-        var btns = new[] { pieces[pieces.Length == 5 ? 2 : 1], pieces[pieces.Length - 1] }
-            .Select(str =>
+        var indexes = new int[2];
+        for (int i = 0; i < 2; i++)
+        {
+            var str = i == 0 ? pieces[pieces.Length == 5 ? 2 : 1] : pieces[pieces.Length - 1];
+            if (str.Length == 2 && str[0] >= 'a' && str[0] <= 'f' && str[1] >= '1' && str[1] <= '6')
+                indexes[i] = (str[0] - 'a') + 6 * (str[1] - '1');
+            else if (str.Length == 3 && str[0] >= '1' && str[0] <= '6' && str[1] == ',' && str[2] >= '1' && str[2] <= '6')
+                indexes[i] = (str[0] - '1') + 6 * (str[2] - '1');
+            else
+                yield break;
+        }
+
+        foreach (var index in indexes)
+        {
+            var result = HandleLetter(index);
+            if (result == true)
             {
-                if (str.Length == 2 && str[0] >= 'a' && str[0] <= 'f' && str[1] >= '1' && str[1] <= '6')
-                    return MainSelectable.Children[(str[0] - 'a') + 6 * (str[1] - '1')];
-                if (str.Length == 3 && str[0] >= '1' && str[0] <= '6' && str[1] == ',' && str[2] >= '1' && str[2] <= '6')
-                    return MainSelectable.Children[(str[0] - '1') + 6 * (str[2] - '1')];
-                return null;
-            })
-            .ToArray();
-        return btns.Contains(null) ? null : btns;
+                yield return "solve";
+                yield break;
+            }
+            else if (result == false)
+            {
+                yield return "strike";
+                yield break;
+            }
+            yield return new WaitForSeconds(.1f);
+        }
     }
 }
