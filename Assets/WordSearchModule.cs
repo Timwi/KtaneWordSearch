@@ -22,6 +22,7 @@ public class WordSearchModule : MonoBehaviour
     public Material MatText;
     public Font Font;
     public Mesh PlaneMesh;
+    public Texture[] Images;
 
     private const int _w = 6;
     private const int _h = 6;
@@ -432,6 +433,7 @@ public class WordSearchModule : MonoBehaviour
 
     private void CreateGraphic(string name, Vector3 position, string imgName, double length, int rotation)
     {
+        Debug.LogFormat("name = {0}, imgName = {1}", name, imgName);
         var go = new GameObject { name = name };
         go.transform.parent = Screen;
         go.transform.localPosition = position;
@@ -439,9 +441,7 @@ public class WordSearchModule : MonoBehaviour
         go.transform.localScale = new Vector3((float) (.032 * length), .032f, .032f);
         go.AddComponent<MeshFilter>().mesh = PlaneMesh;
         var mr = go.AddComponent<MeshRenderer>();
-        var tex = new Texture2D(2, 2);
-        tex.LoadImage(Pngs.RawData[imgName]);
-        mr.material.mainTexture = tex;
+        mr.material.mainTexture = Images.First(im => im.name == imgName);
         mr.material.shader = Shader.Find("Unlit/Transparent");
     }
 
