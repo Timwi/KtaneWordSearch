@@ -453,6 +453,10 @@ public class WordSearchModule : MonoBehaviour
         mr.material.shader = Shader.Find("Unlit/Transparent");
     }
 
+#pragma warning disable 414
+    private string TwitchHelpMessage = @"Select the word starting at column B row 3, and ending at column E row 6, with “!{0} select B3 E6”.";
+#pragma warning restore 414
+
     IEnumerator ProcessTwitchCommand(string command)
     {
         var pieces = command.Trim().ToLowerInvariant().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -475,9 +479,13 @@ public class WordSearchModule : MonoBehaviour
                 yield break;
         }
 
+        yield return null;
+
         foreach (var index in indexes)
         {
+            // Returns true for “solved”, false for “strike”, and null for neither
             var result = HandleLetter(index);
+
             if (result == true)
             {
                 yield return "solve";
@@ -488,7 +496,7 @@ public class WordSearchModule : MonoBehaviour
                 yield return "strike";
                 yield break;
             }
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(.25f);
         }
     }
 }
