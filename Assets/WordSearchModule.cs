@@ -45,6 +45,14 @@ public class WordSearchModule : MonoBehaviour
             .Split(';')
             .Select(pairStr => pairStr.Split('/'))
             .ToArray();
+
+    // Italian version; currently unused
+    private string[][] _chartWords_IT =
+        "/;IVREA/FATTO;CERCA/PISA;MOLTO/VEDI;SIERRA/TROVA;FINITO/EST;/;PORTA/COLORE;AFA/INVIA;LINEA/BLU;ACQUA/ECO;PANICO/FALSO;MANO/IOTA;ESCA/CHIAMA;FESTA/VENTI;LASSO/NORD;PLACCA/ARPA;ZULU/ERESIA;MAREA/GAS;ORCO/OGNI;AIUTO/PIANO;ROMEO/PIOTTA;VERO/ASSO;LUCA/BORDO;ICONA/ROSSO;BOMBA/PARLA;ETANO/UNICO;TEST/POLO;GOLF/LETTO;PARA/SEI;BRAVO/SERIE;SETTE/SUOLA;MODO/FANGO;LISTA/TANGO;GRINGO/VIVAI;/;DETTO/OSCAR;MATTO/NESSO;LEGGO/MARIO;LIMA/SOTTO;VERDE/GIALLO;/"
+            .Split(';')
+            .Select(pairStr => pairStr.Split('/'))
+            .ToArray();
+
     private string _chartLetters = ".VUSZ..PQNXFY.TIMEDA.KBWHJO..RLCG..";
 
     private static int _moduleIdCounter = 1;
