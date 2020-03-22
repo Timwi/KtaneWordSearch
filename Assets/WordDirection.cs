@@ -1,6 +1,6 @@
 ﻿namespace WordSearch
 {
-    public enum Direction
+    public enum WordDirection
     {
         Down,
         DownRight,

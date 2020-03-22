@@ -104,7 +104,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 127088}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.105, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 453294}
@@ -255,8 +255,8 @@ MonoBehaviour:
   m_Script: {fileID: -119419473, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ModuleType: WordSearchModulePL
-  ModuleDisplayName: Word Search PL
+  ModuleType: WordSearchModule
+  ModuleDisplayName: Word Search
   RequiresTimerVisibility: 0
 --- !u!114 &11464240
 MonoBehaviour:
@@ -289,7 +289,7 @@ MonoBehaviour:
   Screen: {fileID: 4000011819128396}
   MatText: {fileID: 2100000, guid: 37e3c60a4705cda4eba106ad4295a6e6, type: 2}
   Font: {fileID: 12800000, guid: 7eb51f37158da2a4e997bd8921adc649, type: 3}
-  PlaneMesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  PlaneMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   Images:
   - {fileID: 2800000, guid: 48fa1492a3d85544dbf8ae611c3571ed, type: 3}
   - {fileID: 2800000, guid: 5f4bc958b6e72b64085c602e64763d4f, type: 3}

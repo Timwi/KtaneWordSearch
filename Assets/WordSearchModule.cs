@@ -114,7 +114,7 @@ public class WordSearchModule : MonoBehaviour
         Debug.LogFormat("[Word Search #{1}] Wrong words are {0}", wrongWords.OrderBy(w => w).JoinString(", "), _moduleId);
 
         var coords = Enumerable.Range(0, _w * _h).ToList();
-        var directions = new[] { Direction.Down, Direction.DownRight, Direction.Right, Direction.UpRight, Direction.Up, Direction.UpLeft, Direction.Left, Direction.DownLeft };
+        var directions = new[] { WordDirection.Down, WordDirection.DownRight, WordDirection.Right, WordDirection.UpRight, WordDirection.Up, WordDirection.UpLeft, WordDirection.Left, WordDirection.DownLeft };
         var indexes = Enumerable.Range(0, _solution.Length).ToList().Shuffle();
 
         coords.Shuffle();
@@ -184,11 +184,11 @@ public class WordSearchModule : MonoBehaviour
         }
     }
 
-    private bool TryPlaceWord(string word, int i, int x, int y, Direction dir)
+    private bool TryPlaceWord(string word, int i, int x, int y, WordDirection dir)
     {
         switch (dir)
         {
-            case Direction.Down:
+            case WordDirection.Down:
                 if (y - i >= 0 && y + (word.Length - 1) - i < _h)
                 {
                     for (int j = 0; j < word.Length; j++)
@@ -200,7 +200,7 @@ public class WordSearchModule : MonoBehaviour
                 }
                 break;
 
-            case Direction.DownRight:
+            case WordDirection.DownRight:
                 if (y - i >= 0 && y + (word.Length - 1) - i < _h && x - i >= 0 && x + (word.Length - 1) - i < _w)
                 {
                     for (int j = 0; j < word.Length; j++)
@@ -212,7 +212,7 @@ public class WordSearchModule : MonoBehaviour
                 }
                 break;
 
-            case Direction.Right:
+            case WordDirection.Right:
                 if (x - i >= 0 && x + (word.Length - 1) - i < _w)
                 {
                     for (int j = 0; j < word.Length; j++)
@@ -224,7 +224,7 @@ public class WordSearchModule : MonoBehaviour
                 }
                 break;
 
-            case Direction.UpRight:
+            case WordDirection.UpRight:
                 if (y + i < _h && y - (word.Length - 1) + i >= 0 && x - i >= 0 && x + (word.Length - 1) - i < _w)
                 {
                     for (int j = 0; j < word.Length; j++)
@@ -236,7 +236,7 @@ public class WordSearchModule : MonoBehaviour
                 }
                 break;
 
-            case Direction.Up:
+            case WordDirection.Up:
                 if (y + i < _h && y - (word.Length - 1) + i >= 0)
                 {
                     for (int j = 0; j < word.Length; j++)
@@ -248,7 +248,7 @@ public class WordSearchModule : MonoBehaviour
                 }
                 break;
 
-            case Direction.UpLeft:
+            case WordDirection.UpLeft:
                 if (y + i < _h && y - (word.Length - 1) + i >= 0 && x + i < _w && x - (word.Length - 1) + i >= 0)
                 {
                     for (int j = 0; j < word.Length; j++)
@@ -260,7 +260,7 @@ public class WordSearchModule : MonoBehaviour
                 }
                 break;
 
-            case Direction.Left:
+            case WordDirection.Left:
                 if (x + i < _w && x - (word.Length - 1) + i >= 0)
                 {
                     for (int j = 0; j < word.Length; j++)
@@ -272,7 +272,7 @@ public class WordSearchModule : MonoBehaviour
                 }
                 break;
 
-            case Direction.DownLeft:
+            case WordDirection.DownLeft:
                 if (y - i >= 0 && y + (word.Length - 1) - i < _h && x + i < _w && x - (word.Length - 1) + i >= 0)
                 {
                     for (int j = 0; j < word.Length; j++)
@@ -445,8 +445,8 @@ public class WordSearchModule : MonoBehaviour
         var go = new GameObject { name = name };
         go.transform.parent = Screen;
         go.transform.localPosition = position;
-        go.transform.localEulerAngles = new Vector3(0, rotation, 0);
-        go.transform.localScale = new Vector3((float) (.032 * length), .032f, .032f);
+        go.transform.localEulerAngles = new Vector3(90, rotation, 0);
+        go.transform.localScale = new Vector3((float) (.32 * length), .32f, .32f);
         go.AddComponent<MeshFilter>().mesh = PlaneMesh;
         var mr = go.AddComponent<MeshRenderer>();
         mr.material.mainTexture = Images.First(im => im.name == imgName);
