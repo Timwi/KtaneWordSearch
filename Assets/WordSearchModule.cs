@@ -38,6 +38,8 @@ public class WordSearchModule : MonoBehaviour
     private bool _isSolved;
 
     private string _solution;
+    private int _solutionStart; // Used by TP autosolver only
+    private int _solutionEnd; // Used by TP autosolver only
     private char[] _field;
 
     private string[][] _chartWords =
@@ -121,7 +123,13 @@ public class WordSearchModule : MonoBehaviour
         foreach (var coord in coords)
             foreach (var dir in directions.Shuffle())
                 if (TryPlaceWord(_solution, 0, coord % _w, coord / _w, dir))
+                {
+                    _solutionStart = coord;
+                    var dx = new[] { 0, 1, 1, 1, 0, -1, -1, -1 };
+                    var dy = new[] { 1, 1, 0, -1, -1, -1, 0, 1 };
+                    _solutionEnd = coord + dx[(int) dir] * (_solution.Length - 1) + 6 * dy[(int) dir] * (_solution.Length - 1);
                     goto initialPlaced;
+                }
 
         Debug.LogFormat("[Word Search #{0}] Fatal: could not place initial word.", _moduleId);
         Module.HandlePass();
@@ -498,5 +506,18 @@ public class WordSearchModule : MonoBehaviour
             }
             yield return new WaitForSeconds(.25f);
         }
+    }
+
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        if (_selectedLetter != null)
+        {
+            MainSelectable.Children[_selectedLetter.Value].OnInteract();
+            yield return new WaitForSeconds(.5f);
+        }
+
+        MainSelectable.Children[_solutionStart].OnInteract();
+        yield return new WaitForSeconds(.5f);
+        MainSelectable.Children[_solutionEnd].OnInteract();
     }
 }
