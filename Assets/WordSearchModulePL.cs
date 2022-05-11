@@ -512,6 +512,8 @@ public class WordSearchModulePL : MonoBehaviour
         MainSelectable.Children[_solutionStart].OnInteract();
         yield return new WaitForSeconds(.5f);
         MainSelectable.Children[_solutionEnd].OnInteract();
-        yield return new WaitForSeconds(.5f);
+
+        while (!_isSolved)
+            yield return null;
     }
 }
