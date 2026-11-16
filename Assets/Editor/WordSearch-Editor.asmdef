@@ -1,0 +1,10 @@
+{
+  "name": "WordSearch-Editor",
+  "references": [
+    "WordSearch"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": []
+}

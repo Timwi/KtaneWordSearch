@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using KModkit;
 using UnityEngine;
 using WordSearch;
 
@@ -16,6 +17,7 @@ public class WordSearchModule : MonoBehaviour
     public KMBombInfo Bomb;
     public KMBombModule Module;
     public KMAudio Audio;
+    public KMRuleSeedable RuleSeedable;
 
     public KMSelectable MainSelectable;
     public Transform Screen;
@@ -41,6 +43,8 @@ public class WordSearchModule : MonoBehaviour
     private int _solutionStart; // Used by TP autosolver only
     private int _solutionEnd; // Used by TP autosolver only
     private char[] _field;
+
+    private int _edgeworkValue = 0;
 
     private string[][] _chartWords =
         "/;HOTEL/DONE;SEARCH/QUEBEC;ADD/CHECK;SIERRA/FIND;FINISH/EAST;/;PORT/COLOR;BOOM/SUBMIT;LINE/BLUE;KABOOM/ECHO;PANIC/FALSE;MANUAL/ALARM;DECOY/CALL;SEE/TWENTY;INDIA/NORTH;NUMBER/LOOK;ZULU/GREEN;VICTOR/XRAY;DELTA/YES;HELP/LOCATE;ROMEO/BEEP;TRUE/EXPERT;MIKE/EDGE;FOUND/RED;BOMBS/WORD;WORK/UNIQUE;TEST/JINX;GOLF/LETTER;TALK/SIX;BRAVO/SERIAL;SEVEN/TIMER;MODULE/SPELL;LIST/TANGO;YANKEE/SOLVE;/;CHART/OSCAR;MATH/NEXT;READ/LISTEN;LIMA/FOUR;COUNT/OFFICE;/"
@@ -70,6 +74,221 @@ public class WordSearchModule : MonoBehaviour
         _selectedLetter = null;
         _isSolved = false;
 
+        // RULE SEED
+        var rnd = RuleSeedable.GetRNG();
+        Debug.LogFormat("[Word Search #{0}] Using rule seed: {1}", _moduleId, rnd.Seed);
+        var snDigits = Bomb.GetSerialNumberNumbers().ToArray();
+        var edgework = new[] {
+            Bomb.GetBatteryCount(),
+            Bomb.GetBatteryHolderCount(),
+            snDigits[0],
+            snDigits[1],
+            snDigits[snDigits.Length - 1],
+            Bomb.GetBatteryCount(Battery.AA) + Bomb.GetBatteryCount(Battery.AAx3) + Bomb.GetBatteryCount(Battery.AAx4),
+            Bomb.GetBatteryCount(Battery.D),
+            Bomb.GetIndicators().Count(),
+            Bomb.GetOnIndicators().Count(),
+            Bomb.GetOffIndicators().Count(),
+            Bomb.GetPortCount(),
+            Bomb.GetPortPlateCount(),
+            Bomb.CountUniquePorts()
+        };
+		
+		var wordlist = new[] {
+			"RULE",
+			"SEED",
+			"MODULE",
+			"CHECK",
+			"CENTER",
+			"TOP",
+			"CHOOSE",
+			"UNIQUE",
+			"MEMORY",
+			"KEYPAD",
+			"FAULT",
+			"FIVE",
+			"BEEP",
+			"FINALE",
+			"KILO",
+			"SUBMIT",
+			"DECOY",
+			"COUNT",
+			"ROMEO",
+			"NEXT",
+			"HELP",
+			"DELTA",
+			"ONE",
+			"MAYBE",
+			"YANKEE",
+			"MANUAL",
+			"YELLOW",
+			"MIKE",
+			"GREEN",
+			"ENDING",
+			"CORNER",
+			"SOUND",
+			"LOCATE",
+			"CUBE",
+			"LIGHT",
+			"NUMBER",
+			"OSCAR",
+			"XRAY",
+			"OFFICE",
+			"STRIKE",
+			"NINE",
+			"BLUE",
+			"CYAN",
+			"GAME",
+			"FOUND",
+			"VIOLET",
+			"ADD",
+			"FINAL",
+			"LIMA",
+			"SOUTH",
+			"DISARM",
+			"EXPERT",
+			"TWO",
+			"YES",
+			"MATH",
+			"FAIL",
+			"CODE",
+			"TEN",
+			"KNOB",
+			"WORD",
+			"FIND",
+			"SEE",
+			"TRACE",
+			"FAKE",
+			"FATE",
+			"DETECT",
+			"ABORT",
+			"CALL",
+			"TRUE",
+			"FINISH",
+			"LIST",
+			"CATCH",
+			"DEFUSE",
+			"TWENTY",
+			"CIRCLE",
+			"PAPA",
+			"HOTEL",
+			"LETTER",
+			"DIVIDE",
+			"END",
+			"QUEBEC",
+			"BOMBS",
+			"TIMER",
+			"TANGO",
+			"RESULT",
+			"READ",
+			"KABOOM",
+			"LEARN",
+			"PLACE",
+			"SPELL",
+			"WORK",
+			"WEST",
+			"WIDGET",
+			"PLATE",
+			"RED",
+			"INPUT",
+			"OUTPUT",
+			"ORANGE",
+			"SEVEN",
+			"PURPLE",
+			"EDGE",
+			"TEST",
+			"WHITE",
+			"BLACK",
+			"FEAR",
+			"SIERRA",
+			"LISTEN",
+			"ALARM",
+			"REAL",
+			"PANIC",
+			"ZULU",
+			"SEARCH",
+			"JINX",
+			"THREE",
+			"DONE",
+			"ECHO",
+			"EIGHT",
+			"FALSE",
+			"BRAVO",
+			"ELEVEN",
+			"TWELVE",
+			"THIRTY",
+			"DIGIT",
+			"GLYPH",
+			"LOOK",
+			"GOLF",
+			"MIDDLE",
+			"LEFT",
+			"RIGHT",
+			"DOWN",
+			"BOOM",
+			"BOTTOM",
+			"CHART",
+			"ONLY",
+			"PANEL",
+			"WIRE",
+			"BUTTON",
+			"SWITCH",
+			"LINE",
+			"SIX",
+			"COLOR",
+			"HAZARD",
+			"MAZE",
+			"SERIAL",
+			"MUSIC",
+			"PORT",
+			"LOCK",
+			"BREAK",
+			"BURST",
+			"TALK",
+			"UNDO",
+			"EAST",
+			"SOLVE",
+			"PRESS",
+			"HOLD",
+			"MONEY",
+			"BUDGET",
+			"NORTH",
+			"VICTOR",
+			"SQUARE",
+			"FOUR",
+			"FORGET",
+			"LOGIC",
+			"INDIA"
+        };
+		
+		var alphabet = new[] { 'M', 'D', 'U', 'X', 'A', 'H', 'N', 'C', 'B', 'F', 'J', 'S', 'E', 'W', 'O', 'Q', 'Z', 'T', 'R', 'V', 'L', 'Y', 'K', 'I', 'P', 'G' };
+		
+        _edgeworkValue = edgework[rnd.Next(0, edgework.Length)];
+		rnd.ShuffleFisherYates(wordlist);
+		rnd.ShuffleFisherYates(alphabet);
+        var usedWords = "/;";
+        _chartLetters = "";
+
+        for (int i = 0; i < 37; i++) {
+            usedWords += wordlist[2 * i] + "/" + wordlist[2 * i + 1] + ";";
+            if (i == 4 || i == 32)
+                usedWords += "/;";
+        }
+        usedWords += "/";
+
+        _chartWords = usedWords.Split(';').Select(pairStr => pairStr.Split('/')).ToArray();
+
+        for (int i = 0; i < 26; i++) {
+            if (i == 0 || (i - 4) % 6 == 0)
+                _chartLetters += ".";
+            _chartLetters += alphabet[i];
+            if (i == 3 || i == 21 || i == 25)
+                _chartLetters += ".";
+        }
+        _chartLetters += ".";
+
+        // END RULE SEED
+
         for (int i = 0; i < MainSelectable.Children.Length; i++)
         {
             _textMeshes[i] = MainSelectable.Children[i].GetComponent<TextMesh>();
@@ -87,9 +306,8 @@ public class WordSearchModule : MonoBehaviour
     void ActivateModule()
     {
         _isActive = true;
-        var serial = Bomb.GetSerialNumber();
-        var serialOdd = serial == null ? Rnd.Range(0, 2) == 0 : "13579".Contains(Bomb.GetSerialNumber().Last());
-        Debug.LogFormat("[Word Search #{1}] Activated; serial number is {0}", serialOdd ? "odd" : "even", _moduleId);
+        var bottomHalf = _edgeworkValue % 2 == 1;
+        Debug.LogFormat("[Word Search #{1}] Activated; edgework condition is {0}", bottomHalf ? "odd" : "even", _moduleId);
 
         tryAgain:
 
@@ -100,10 +318,10 @@ public class WordSearchModule : MonoBehaviour
         _field[_w * _h - 1] = (char) ('A' + Rnd.Range(0, 26));
 
         var wrongWords = Ut.NewArray(
-            _chartWords[_chartLetters.IndexOf(_field[0]) + 8][serialOdd ? 1 : 0],
-            _chartWords[_chartLetters.IndexOf(_field[_w - 1]) + 7][serialOdd ? 1 : 0],
-            _chartWords[_chartLetters.IndexOf(_field[_w * (_h - 1)]) + 1][serialOdd ? 1 : 0],
-            _chartWords[_chartLetters.IndexOf(_field[_w * _h - 1])][serialOdd ? 1 : 0]
+            _chartWords[_chartLetters.IndexOf(_field[0]) + 8][bottomHalf ? 1 : 0],
+            _chartWords[_chartLetters.IndexOf(_field[_w - 1]) + 7][bottomHalf ? 1 : 0],
+            _chartWords[_chartLetters.IndexOf(_field[_w * (_h - 1)]) + 1][bottomHalf ? 1 : 0],
+            _chartWords[_chartLetters.IndexOf(_field[_w * _h - 1])][bottomHalf ? 1 : 0]
         ).Distinct().ToList();
 
         var correctIndex = Rnd.Range(0, wrongWords.Count);
