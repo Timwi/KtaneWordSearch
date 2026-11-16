@@ -52,19 +52,12 @@ public class WordSearchModule : MonoBehaviour
             .Select(pairStr => pairStr.Split('/'))
             .ToArray();
 
-    // Italian version; currently unused
-    private string[][] _chartWords_IT =
-        "/;IVREA/FATTO;CERCA/PISA;MOLTO/VEDI;SIERRA/TROVA;FINITO/EST;/;PORTA/COLORE;AFA/INVIA;LINEA/BLU;ACQUA/ECO;PANICO/FALSO;MANO/IOTA;ESCA/CHIAMA;FESTA/VENTI;LASSO/NORD;PLACCA/ARPA;ZULU/ERESIA;MAREA/GAS;ORCO/OGNI;AIUTO/PIANO;ROMEO/PIOTTA;VERO/ASSO;LUCA/BORDO;ICONA/ROSSO;BOMBA/PARLA;ETANO/UNICO;TEST/POLO;GOLF/LETTO;PARA/SEI;BRAVO/SERIE;SETTE/SUOLA;MODO/FANGO;LISTA/TANGO;GRINGO/VIVAI;/;DETTO/OSCAR;MATTO/NESSO;LEGGO/MARIO;LIMA/SOTTO;VERDE/GIALLO;/"
-            .Split(';')
-            .Select(pairStr => pairStr.Split('/'))
-            .ToArray();
-
     private string _chartLetters = ".VUSZ..PQNXFY.TIMEDA.KBWHJO..RLCG..";
 
     private static int _moduleIdCounter = 1;
     private int _moduleId;
 
-    void Start()
+    private void Start()
     {
         _moduleId = _moduleIdCounter++;
 
@@ -78,7 +71,7 @@ public class WordSearchModule : MonoBehaviour
         var rnd = RuleSeedable.GetRNG();
         Debug.LogFormat("[Word Search #{0}] Using rule seed: {1}", _moduleId, rnd.Seed);
         var snDigits = Bomb.GetSerialNumberNumbers().ToArray();
-        var edgework = new[] {
+        var edgework = Ut.NewArray(
             Bomb.GetBatteryCount(),
             Bomb.GetBatteryHolderCount(),
             snDigits[0],
@@ -91,185 +84,20 @@ public class WordSearchModule : MonoBehaviour
             Bomb.GetOffIndicators().Count(),
             Bomb.GetPortCount(),
             Bomb.GetPortPlateCount(),
-            Bomb.CountUniquePorts()
-        };
-		
-		var wordlist = new[] {
-			"RULE",
-			"SEED",
-			"MODULE",
-			"CHECK",
-			"CENTER",
-			"TOP",
-			"CHOOSE",
-			"UNIQUE",
-			"MEMORY",
-			"KEYPAD",
-			"FAULT",
-			"FIVE",
-			"BEEP",
-			"FINALE",
-			"KILO",
-			"SUBMIT",
-			"DECOY",
-			"COUNT",
-			"ROMEO",
-			"NEXT",
-			"HELP",
-			"DELTA",
-			"ONE",
-			"MAYBE",
-			"YANKEE",
-			"MANUAL",
-			"YELLOW",
-			"MIKE",
-			"GREEN",
-			"ENDING",
-			"CORNER",
-			"SOUND",
-			"LOCATE",
-			"CUBE",
-			"LIGHT",
-			"NUMBER",
-			"OSCAR",
-			"XRAY",
-			"OFFICE",
-			"STRIKE",
-			"NINE",
-			"BLUE",
-			"CYAN",
-			"GAME",
-			"FOUND",
-			"VIOLET",
-			"ADD",
-			"FINAL",
-			"LIMA",
-			"SOUTH",
-			"DISARM",
-			"EXPERT",
-			"TWO",
-			"YES",
-			"MATH",
-			"FAIL",
-			"CODE",
-			"TEN",
-			"KNOB",
-			"WORD",
-			"FIND",
-			"SEE",
-			"TRACE",
-			"FAKE",
-			"FATE",
-			"DETECT",
-			"ABORT",
-			"CALL",
-			"TRUE",
-			"FINISH",
-			"LIST",
-			"CATCH",
-			"DEFUSE",
-			"TWENTY",
-			"CIRCLE",
-			"PAPA",
-			"HOTEL",
-			"LETTER",
-			"DIVIDE",
-			"END",
-			"QUEBEC",
-			"BOMBS",
-			"TIMER",
-			"TANGO",
-			"RESULT",
-			"READ",
-			"KABOOM",
-			"LEARN",
-			"PLACE",
-			"SPELL",
-			"WORK",
-			"WEST",
-			"WIDGET",
-			"PLATE",
-			"RED",
-			"INPUT",
-			"OUTPUT",
-			"ORANGE",
-			"SEVEN",
-			"PURPLE",
-			"EDGE",
-			"TEST",
-			"WHITE",
-			"BLACK",
-			"FEAR",
-			"SIERRA",
-			"LISTEN",
-			"ALARM",
-			"REAL",
-			"PANIC",
-			"ZULU",
-			"SEARCH",
-			"JINX",
-			"THREE",
-			"DONE",
-			"ECHO",
-			"EIGHT",
-			"FALSE",
-			"BRAVO",
-			"ELEVEN",
-			"TWELVE",
-			"THIRTY",
-			"DIGIT",
-			"GLYPH",
-			"LOOK",
-			"GOLF",
-			"MIDDLE",
-			"LEFT",
-			"RIGHT",
-			"DOWN",
-			"BOOM",
-			"BOTTOM",
-			"CHART",
-			"ONLY",
-			"PANEL",
-			"WIRE",
-			"BUTTON",
-			"SWITCH",
-			"LINE",
-			"SIX",
-			"COLOR",
-			"HAZARD",
-			"MAZE",
-			"SERIAL",
-			"MUSIC",
-			"PORT",
-			"LOCK",
-			"BREAK",
-			"BURST",
-			"TALK",
-			"UNDO",
-			"EAST",
-			"SOLVE",
-			"PRESS",
-			"HOLD",
-			"MONEY",
-			"BUDGET",
-			"NORTH",
-			"VICTOR",
-			"SQUARE",
-			"FOUR",
-			"FORGET",
-			"LOGIC",
-			"INDIA"
-        };
-		
-		var alphabet = new[] { 'M', 'D', 'U', 'X', 'A', 'H', 'N', 'C', 'B', 'F', 'J', 'S', 'E', 'W', 'O', 'Q', 'Z', 'T', 'R', 'V', 'L', 'Y', 'K', 'I', 'P', 'G' };
-		
+            Bomb.CountUniquePorts());
+
+        var wordlist = new[] { "RULE", "SEED", "MODULE", "CHECK", "CENTER", "TOP", "CHOOSE", "UNIQUE", "MEMORY", "KEYPAD", "FAULT", "FIVE", "BEEP", "FINALE", "KILO", "SUBMIT", "DECOY", "COUNT", "ROMEO", "NEXT", "HELP", "DELTA", "ONE", "MAYBE", "YANKEE", "MANUAL", "YELLOW", "MIKE", "GREEN", "ENDING", "CORNER", "SOUND", "LOCATE", "CUBE", "LIGHT", "NUMBER", "OSCAR", "XRAY", "OFFICE", "STRIKE", "NINE", "BLUE", "CYAN", "GAME", "FOUND", "VIOLET", "ADD", "FINAL", "LIMA", "SOUTH", "DISARM", "EXPERT", "TWO", "YES", "MATH", "FAIL", "CODE", "TEN", "KNOB", "WORD", "FIND", "SEE", "TRACE", "FAKE", "FATE", "DETECT", "ABORT", "CALL", "TRUE", "FINISH", "LIST", "CATCH", "DEFUSE", "TWENTY", "CIRCLE", "PAPA", "HOTEL", "LETTER", "DIVIDE", "END", "QUEBEC", "BOMBS", "TIMER", "TANGO", "RESULT", "READ", "KABOOM", "LEARN", "PLACE", "SPELL", "WORK", "WEST", "WIDGET", "PLATE", "RED", "INPUT", "OUTPUT", "ORANGE", "SEVEN", "PURPLE", "EDGE", "TEST", "WHITE", "BLACK", "FEAR", "SIERRA", "LISTEN", "ALARM", "REAL", "PANIC", "ZULU", "SEARCH", "JINX", "THREE", "DONE", "ECHO", "EIGHT", "FALSE", "BRAVO", "ELEVEN", "TWELVE", "THIRTY", "DIGIT", "GLYPH", "LOOK", "GOLF", "MIDDLE", "LEFT", "RIGHT", "DOWN", "BOOM", "BOTTOM", "CHART", "ONLY", "PANEL", "WIRE", "BUTTON", "SWITCH", "LINE", "SIX", "COLOR", "HAZARD", "MAZE", "SERIAL", "MUSIC", "PORT", "LOCK", "BREAK", "BURST", "TALK", "UNDO", "EAST", "SOLVE", "PRESS", "HOLD", "MONEY", "BUDGET", "NORTH", "VICTOR", "SQUARE", "FOUR", "FORGET", "LOGIC", "INDIA" };
+
+        var alphabet = new[] { 'M', 'D', 'U', 'X', 'A', 'H', 'N', 'C', 'B', 'F', 'J', 'S', 'E', 'W', 'O', 'Q', 'Z', 'T', 'R', 'V', 'L', 'Y', 'K', 'I', 'P', 'G' };
+
         _edgeworkValue = edgework[rnd.Next(0, edgework.Length)];
-		rnd.ShuffleFisherYates(wordlist);
-		rnd.ShuffleFisherYates(alphabet);
+        rnd.ShuffleFisherYates(wordlist);
+        rnd.ShuffleFisherYates(alphabet);
         var usedWords = "/;";
         _chartLetters = "";
 
-        for (int i = 0; i < 37; i++) {
+        for (var i = 0; i < 37; i++)
+        {
             usedWords += wordlist[2 * i] + "/" + wordlist[2 * i + 1] + ";";
             if (i == 4 || i == 32)
                 usedWords += "/;";
@@ -278,7 +106,8 @@ public class WordSearchModule : MonoBehaviour
 
         _chartWords = usedWords.Split(';').Select(pairStr => pairStr.Split('/')).ToArray();
 
-        for (int i = 0; i < 26; i++) {
+        for (var i = 0; i < 26; i++)
+        {
             if (i == 0 || (i - 4) % 6 == 0)
                 _chartLetters += ".";
             _chartLetters += alphabet[i];
@@ -289,7 +118,7 @@ public class WordSearchModule : MonoBehaviour
 
         // END RULE SEED
 
-        for (int i = 0; i < MainSelectable.Children.Length; i++)
+        for (var i = 0; i < MainSelectable.Children.Length; i++)
         {
             _textMeshes[i] = MainSelectable.Children[i].GetComponent<TextMesh>();
             _textMeshes[i].text = "";
@@ -303,7 +132,7 @@ public class WordSearchModule : MonoBehaviour
         Module.OnActivate = ActivateModule;
     }
 
-    void ActivateModule()
+    private void ActivateModule()
     {
         _isActive = true;
         var bottomHalf = _edgeworkValue % 2 == 1;
@@ -363,18 +192,18 @@ public class WordSearchModule : MonoBehaviour
 
             coords.Shuffle();
 
-            for (int c = 0; c < coords.Count; c++)
+            for (var c = 0; c < coords.Count; c++)
             {
                 var ch = _field[coords[c]];
                 if (ch == '\0')
                     continue;
                 indexes.Clear();
-                for (int i = 0; i < decoy.Length; i++)
+                for (var i = 0; i < decoy.Length; i++)
                     if (decoy[i] == ch)
                         indexes.Add(i);
                 indexes.Shuffle();
 
-                for (int i = 0; i < indexes.Count; i++)
+                for (var i = 0; i < indexes.Count; i++)
                 {
                     var x = coords[c] % _w;
                     var y = coords[c] / _w;
@@ -387,7 +216,7 @@ public class WordSearchModule : MonoBehaviour
             decoyPlaced:;
         }
 
-        for (int i = 0; i < _w * _h; i++)
+        for (var i = 0; i < _w * _h; i++)
             if (_field[i] == '\0')
                 _field[i] = (char) ('A' + Rnd.Range(0, 26));
 
@@ -403,7 +232,7 @@ public class WordSearchModule : MonoBehaviour
 
         Debug.LogFormat("[Word Search #{1}] Field:{0}", _field.Select((ch, i) => (i % _w == 0 ? "\n" : null) + (ch == '\0' ? '?' : ch)).JoinString(), _moduleId);
 
-        for (int i = 0; i < _w * _h; i++)
+        for (var i = 0; i < _w * _h; i++)
         {
             _textMeshes[i].text = _field[i].ToString();
             TransitionLetter(i, LetterState.Visible, 25, Rnd.Range(.5f, 1.5f));
@@ -417,10 +246,10 @@ public class WordSearchModule : MonoBehaviour
             case WordDirection.Down:
                 if (y - i >= 0 && y + (word.Length - 1) - i < _h)
                 {
-                    for (int j = 0; j < word.Length; j++)
+                    for (var j = 0; j < word.Length; j++)
                         if (_field[x + _w * (y - i + j)] != '\0' && _field[x + _w * (y - i + j)] != word[j])
                             return false;
-                    for (int j = 0; j < word.Length; j++)
+                    for (var j = 0; j < word.Length; j++)
                         _field[x + _w * (y - i + j)] = word[j];
                     return true;
                 }
@@ -429,10 +258,10 @@ public class WordSearchModule : MonoBehaviour
             case WordDirection.DownRight:
                 if (y - i >= 0 && y + (word.Length - 1) - i < _h && x - i >= 0 && x + (word.Length - 1) - i < _w)
                 {
-                    for (int j = 0; j < word.Length; j++)
+                    for (var j = 0; j < word.Length; j++)
                         if (_field[(x - i + j) + _w * (y - i + j)] != '\0' && _field[(x - i + j) + _w * (y - i + j)] != word[j])
                             return false;
-                    for (int j = 0; j < word.Length; j++)
+                    for (var j = 0; j < word.Length; j++)
                         _field[(x - i + j) + _w * (y - i + j)] = word[j];
                     return true;
                 }
@@ -441,10 +270,10 @@ public class WordSearchModule : MonoBehaviour
             case WordDirection.Right:
                 if (x - i >= 0 && x + (word.Length - 1) - i < _w)
                 {
-                    for (int j = 0; j < word.Length; j++)
+                    for (var j = 0; j < word.Length; j++)
                         if (_field[(x - i + j) + _w * y] != '\0' && _field[(x - i + j) + _w * y] != word[j])
                             return false;
-                    for (int j = 0; j < word.Length; j++)
+                    for (var j = 0; j < word.Length; j++)
                         _field[(x - i + j) + _w * y] = word[j];
                     return true;
                 }
@@ -453,10 +282,10 @@ public class WordSearchModule : MonoBehaviour
             case WordDirection.UpRight:
                 if (y + i < _h && y - (word.Length - 1) + i >= 0 && x - i >= 0 && x + (word.Length - 1) - i < _w)
                 {
-                    for (int j = 0; j < word.Length; j++)
+                    for (var j = 0; j < word.Length; j++)
                         if (_field[(x - i + j) + _w * (y + i - j)] != '\0' && _field[(x - i + j) + _w * (y + i - j)] != word[j])
                             return false;
-                    for (int j = 0; j < word.Length; j++)
+                    for (var j = 0; j < word.Length; j++)
                         _field[(x - i + j) + _w * (y + i - j)] = word[j];
                     return true;
                 }
@@ -465,10 +294,10 @@ public class WordSearchModule : MonoBehaviour
             case WordDirection.Up:
                 if (y + i < _h && y - (word.Length - 1) + i >= 0)
                 {
-                    for (int j = 0; j < word.Length; j++)
+                    for (var j = 0; j < word.Length; j++)
                         if (_field[x + _w * (y + i - j)] != '\0' && _field[x + _w * (y + i - j)] != word[j])
                             return false;
-                    for (int j = 0; j < word.Length; j++)
+                    for (var j = 0; j < word.Length; j++)
                         _field[x + _w * (y + i - j)] = word[j];
                     return true;
                 }
@@ -477,10 +306,10 @@ public class WordSearchModule : MonoBehaviour
             case WordDirection.UpLeft:
                 if (y + i < _h && y - (word.Length - 1) + i >= 0 && x + i < _w && x - (word.Length - 1) + i >= 0)
                 {
-                    for (int j = 0; j < word.Length; j++)
+                    for (var j = 0; j < word.Length; j++)
                         if (_field[(x + i - j) + _w * (y + i - j)] != '\0' && _field[(x + i - j) + _w * (y + i - j)] != word[j])
                             return false;
-                    for (int j = 0; j < word.Length; j++)
+                    for (var j = 0; j < word.Length; j++)
                         _field[(x + i - j) + _w * (y + i - j)] = word[j];
                     return true;
                 }
@@ -489,10 +318,10 @@ public class WordSearchModule : MonoBehaviour
             case WordDirection.Left:
                 if (x + i < _w && x - (word.Length - 1) + i >= 0)
                 {
-                    for (int j = 0; j < word.Length; j++)
+                    for (var j = 0; j < word.Length; j++)
                         if (_field[(x + i - j) + _w * y] != '\0' && _field[(x + i - j) + _w * y] != word[j])
                             return false;
-                    for (int j = 0; j < word.Length; j++)
+                    for (var j = 0; j < word.Length; j++)
                         _field[(x + i - j) + _w * y] = word[j];
                     return true;
                 }
@@ -501,10 +330,10 @@ public class WordSearchModule : MonoBehaviour
             case WordDirection.DownLeft:
                 if (y - i >= 0 && y + (word.Length - 1) - i < _h && x + i < _w && x - (word.Length - 1) + i >= 0)
                 {
-                    for (int j = 0; j < word.Length; j++)
+                    for (var j = 0; j < word.Length; j++)
                         if (_field[(x + i - j) + _w * (y - i + j)] != '\0' && _field[(x + i - j) + _w * (y - i + j)] != word[j])
                             return false;
-                    for (int j = 0; j < word.Length; j++)
+                    for (var j = 0; j < word.Length; j++)
                         _field[(x + i - j) + _w * (y - i + j)] = word[j];
                     return true;
                 }
@@ -513,7 +342,7 @@ public class WordSearchModule : MonoBehaviour
         return false;
     }
 
-    private HashSet<int> _coroutinesActive = new HashSet<int>();
+    private readonly HashSet<int> _coroutinesActive = new HashSet<int>();
 
     private void TransitionLetter(int ix, LetterState newState, int steps, float? delay = null)
     {
@@ -541,7 +370,7 @@ public class WordSearchModule : MonoBehaviour
 
         restart:
 
-        for (int i = 0; i <= steps; i++)
+        for (var i = 0; i <= steps; i++)
         {
             _textMeshes[ix].color = Color.Lerp(ColorFromLetterState(prevState), ColorFromLetterState(newState), Math.Max(0, Math.Min(1, i / (float) steps + Rnd.Range(-.25f, .25f))));
             yield return null;
@@ -610,15 +439,9 @@ public class WordSearchModule : MonoBehaviour
         return ret;
     }
 
-    private void giveStrike()
-    {
-        Module.HandleStrike();
-    }
+    private void giveStrike() => Module.HandleStrike();
 
-    private void doPass()
-    {
-        Module.HandlePass();
-    }
+    private void doPass() => Module.HandlePass();
 
     private bool isCorrect(int startLetter, int endLetter, out string logMessage, out int[] indexes)
     {
@@ -680,10 +503,10 @@ public class WordSearchModule : MonoBehaviour
     }
 
 #pragma warning disable 414
-    private string TwitchHelpMessage = @"Select the word starting at column B row 3, and ending at column E row 6, with “!{0} select B3 E6”.";
+    private readonly string TwitchHelpMessage = @"Select the word starting at column B row 3, and ending at column E row 6, with “!{0} select B3 E6”.";
 #pragma warning restore 414
 
-    IEnumerator ProcessTwitchCommand(string command)
+    private IEnumerator ProcessTwitchCommand(string command)
     {
         var pieces = command.Trim().ToLowerInvariant().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         if ((pieces.Length != 3 && pieces.Length != 4 && pieces.Length != 5) || pieces[0] != "select")
@@ -694,7 +517,7 @@ public class WordSearchModule : MonoBehaviour
             yield break;
 
         var indexes = new int[2];
-        for (int i = 0; i < 2; i++)
+        for (var i = 0; i < 2; i++)
         {
             var str = i == 0 ? pieces[pieces.Length == 5 ? 2 : 1] : pieces[pieces.Length - 1];
             if (str.Length == 2 && str[0] >= 'a' && str[0] <= 'f' && str[1] >= '1' && str[1] <= '6')
@@ -726,7 +549,7 @@ public class WordSearchModule : MonoBehaviour
         }
     }
 
-    IEnumerator TwitchHandleForcedSolve()
+    private IEnumerator TwitchHandleForcedSolve()
     {
         if (_selectedLetter != null)
         {
